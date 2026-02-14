@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لعبتنا العائلية ❤️</title>
+<style>
+body, html{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    font-family:Arial, sans-serif;
+}
+#menu{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+    background:black;
+    color:white;
+}
+button{
+    padding:15px 25px;
+    margin:10px;
+    font-size:20px;
+    border:none;
+    border-radius:15px;
+    background:#ff4d6d;
+    color:white;
+    cursor:pointer;
+}
+#game{
+    display:none;
+    width:100%;
+    height:100vh;
+    color:white;
+    text-align:center;
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+h2{font-size:28px; text-shadow:2px 2px 5px black;}
+.choice-btn{
+    padding:12px 20px;
+    margin:8px;
+    font-size:18px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,77,109,0.8);
+    color:white;
+    cursor:pointer;
+    width:250px;
+}
+#final{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:black;
+    color:white;
+    height:100vh;
+    padding:20px;
+}
+#final img{
+    max-width:80%;
+    border-radius:20px;
+    box-shadow:0 0 25px pink;
+    margin-bottom:20px;
+}
+#final p{
+    font-size:20px;
+    line-height:1.6;
+    max-width:900px;
+    text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div id="menu">
+    <h1>اختر قلبك ❤️</h1>
+    <button onclick="start('mom')">أمي</button>
+    <button onclick="start('sis1')">أختي أسماء</button>
+    <button onclick="start('sis2')">أختي إيمان</button>
+</div>
+
+<div id="game">
+    <h2 id="question"></h2>
+    <div id="choices"></div>
+</div>
+
+<div id="final">
+    <img src="family.jpeg" alt="عائلتنا">
+    <p id="final-text"></p>
+</div>
+
+<script>
+// ----- بيانات الأسئلة -----
+const data = {
+    mom:[
+        {
+            img:"mom1.jpeg",
+            q:"متى كان تاريخ ميلادك؟",
+            choices:["15 ديسمبر 1976","1 يناير 1980","20 يوليو 1975","30 مارس 1978"],
+            answer:0
+        },
+        {
+            img:"mom2.jpeg",
+            q:"ماذا حدث عندما نزعت سنك؟",
+            choices:["أصبحت تتكلمين بحرف الثاء","صرتِ تغنين","أصبحت لا تستطيعين الأكل","بدأتِ ترسمين"],
+            answer:0
+        },
+        {
+            img:"mom3.jpeg",
+            q:"ما هي رغبتك الشديدة؟",
+            choices:["الذهاب إلى مكة المكرمة","شراء سيارة","السفر إلى باريس","تعلم الرسم"],
+            answer:0,
+            note:"لا تقلقي يا أمي، حتى وإن لم تذهبي، أنا موجود وستذهبين بقدرة الله"
+        }
+    ],
+    sis1:[
+        {
+            img:"sis1_1.jpg",
+            q:"متى كان تاريخ ميلادك؟",
+            choices:["18 أوت 2000","10 سبتمبر 2000","25 ديسمبر 1999","1 يناير 2001"],
+            answer:0
+        },
+        {
+            img:"sis1_2.jpg",
+            q:"ماذا تفعلين عندما تغلق باب قاعة الجلوس؟",
+            choices:["أنظر إليك من ثقب الباب","أذهب للنوم","أقرأ كتابًا","أغني"],
+            answer:0
+        },
+        {
+            img:"sis1_3.jpg",
+            q:"حدث مهم في حياتك؟",
+            choices:["زيارة مكة وزواجك","شراء سيارة","تخرجك من المدرسة","الرحلة الصيفية"],
+            answer:0
+        }
+    ],
+    sis2:[
+        {
+            img:"sis2_1.jpg",
+            q:"متى كان تاريخ ميلادك؟",
+            choices:["11 سبتمبر 1998","15 سبتمبر 1999","20 أغسطس 1998","1 يناير 1998"],
+            answer:0
+        },
+        {
+            img:"sis2_2.jpeg",
+            q:"موقف مضحك؟",
+            choices:["أطلقت الريح أمام الضيفة","نسيت حقيبتك","وقعت الدراجة","أغلق الباب على إصبعك"],
+            answer:0
+        },
+        {
+            img:"sis2_3.jpg",
+            q:"حدث مهم في حياتك؟",
+            choices:["قبولك في دراسة الألمانية","رحلة عائلية","حصولك على جائزة","تعلم الرسم"],
+            answer:0
+        }
+    ]
+};
+
+// نص طويل للنهاية
+const finalMessage = `أنتِ/أنتم عائلتي العزيزة، كل لحظة قضيناها معاً محفورة في قلبي. كل ابتسامة، كل ذكرى، كل لحظة صغيرة كانت تجعل حياتنا أجمل. 
+أمي الحبيبة، أختي أسماء، أختي إيمان، أنتم أعظم هدية أعطاني الله إياها. وجودكم حولي يملأ قلبي فرحاً وسعادة لا تنتهي. 
+مهما حدث، مهما ابتعدنا، تظل محبتنا واحدة قوية لا تتغير. 
+كل عام وأنتم حبي ❤️`;
+
+// ----- اللعبة -----
+let current = 0;
+let currentData = [];
+
+function start(person){
+    currentData = data[person];
+    current = 0;
+    document.getElementById("menu").style.display="none";
+    document.getElementById("final").style.display="none";
+    document.getElementById("game").style.display="flex";
+    showQuestion();
+}
+
+function showQuestion(){
+    const q = currentData[current];
+    document.getElementById("game").style.backgroundImage = `url(${q.img})`;
+    document.getElementById("question").textContent = q.q;
+    const choicesDiv = document.getElementById("choices");
+    choicesDiv.innerHTML="";
+    q.choices.forEach((c,i)=>{
+        const btn = document.createElement("button");
+        btn.textContent = c;
+        btn.className="choice-btn";
+        btn.onclick = ()=>{
+            if(i === q.answer){
+                if(q.note) alert(q.note);
+                current++;
+                if(current < currentData.length){
+                    showQuestion();
+                }else{
+                    endGame();
+                }
+            }else{
+                alert("حاول مرة أخرى 😅");
+            }
+        };
+        choicesDiv.appendChild(btn);
+    });
+}
+
+function endGame(){
+    document.getElementById("game").style.display="none";
+    document.getElementById("final").style.display="flex";
+    document.getElementById("final-text").textContent = finalMessage;
+}
+</script>
+
+</body>
+</html>
